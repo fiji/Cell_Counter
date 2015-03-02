@@ -187,8 +187,7 @@ public class CellCntrImageCanvas extends ImageCanvas {
 				img.updateImage();
 			}
 			final Image image2 = img.getImage();
-			if (image != null) gr.drawImage(image2, 0, 0, img.getWidth(), img
-				.getHeight(), null);
+			gr.drawImage(image2, 0, 0, img.getWidth(), img.getHeight(), null);
 		}
 		catch (final OutOfMemoryError e) {
 			IJ.outOfMemory("Paint " + e.getMessage());
