@@ -49,7 +49,7 @@ import java.util.Vector;
  */
 public class CellCntrImageCanvas extends ImageCanvas {
 
-	private Vector typeVector;
+	private Vector<CellCntrMarkerVector> typeVector;
 	private CellCntrMarkerVector currentMarkerVector;
 	private final CellCounter cc;
 	private final ImagePlus img;
@@ -59,8 +59,9 @@ public class CellCntrImageCanvas extends ImageCanvas {
 	private final Font font = new Font("SansSerif", Font.PLAIN, 10);
 
 	/** Creates a new instance of CellCntrImageCanvas */
-	public CellCntrImageCanvas(final ImagePlus img, final Vector typeVector,
-		final CellCounter cc, final Vector displayList)
+	public CellCntrImageCanvas(final ImagePlus img,
+		final Vector<CellCntrMarkerVector> typeVector, final CellCounter cc,
+		final Vector<Roi> displayList)
 	{
 		super(img);
 		this.img = img;
@@ -147,14 +148,14 @@ public class CellCntrImageCanvas extends ImageCanvas {
 		g2.setStroke(new BasicStroke(1f));
 		g2.setFont(font);
 
-		final ListIterator it = typeVector.listIterator();
+		final ListIterator<CellCntrMarkerVector> it = typeVector.listIterator();
 		while (it.hasNext()) {
-			final CellCntrMarkerVector mv = (CellCntrMarkerVector) it.next();
+			final CellCntrMarkerVector mv = it.next();
 			final int typeID = mv.getType();
 			g2.setColor(mv.getColor());
-			final ListIterator mit = mv.listIterator();
+			final ListIterator<CellCntrMarker> mit = mv.listIterator();
 			while (mit.hasNext()) {
-				final CellCntrMarker m = (CellCntrMarker) mit.next();
+				final CellCntrMarker m = mit.next();
 				final boolean sameSlice = m.getZ() == img.getCurrentSlice();
 				if (sameSlice || showAll) {
 					xM = ((m.getX() - srcRect.x) * magnification);
@@ -196,14 +197,14 @@ public class CellCntrImageCanvas extends ImageCanvas {
 		final Graphics2D g2r = (Graphics2D) gr;
 		g2r.setStroke(new BasicStroke(1f));
 
-		final ListIterator it = typeVector.listIterator();
+		final ListIterator<CellCntrMarkerVector> it = typeVector.listIterator();
 		while (it.hasNext()) {
-			final CellCntrMarkerVector mv = (CellCntrMarkerVector) it.next();
+			final CellCntrMarkerVector mv = it.next();
 			final int typeID = mv.getType();
 			g2r.setColor(mv.getColor());
-			final ListIterator mit = mv.listIterator();
+			final ListIterator<CellCntrMarker> mit = mv.listIterator();
 			while (mit.hasNext()) {
-				final CellCntrMarker m = (CellCntrMarker) mit.next();
+				final CellCntrMarker m = mit.next();
 				if (m.getZ() == img.getCurrentSlice()) {
 					xM = m.getX();
 					yM = m.getY();
@@ -214,9 +215,10 @@ public class CellCntrImageCanvas extends ImageCanvas {
 			}
 		}
 
-		final Vector displayList = getDisplayList();
+		@SuppressWarnings("unchecked")
+		final Vector<Roi> displayList = getDisplayList();
 		if (displayList != null && displayList.size() == 1) {
-			final Roi roi = (Roi) displayList.elementAt(0);
+			final Roi roi = displayList.elementAt(0);
 			if (roi.getType() == Roi.COMPOSITE) roi.draw(gr);
 		}
 
@@ -229,13 +231,13 @@ public class CellCntrImageCanvas extends ImageCanvas {
 			img.setSlice(i);
 			final ImageProcessor ip = img.getProcessor();
 
-			final ListIterator it = typeVector.listIterator();
+			final ListIterator<CellCntrMarkerVector> it = typeVector.listIterator();
 			while (it.hasNext()) {
-				final CellCntrMarkerVector mv = (CellCntrMarkerVector) it.next();
+				final CellCntrMarkerVector mv = it.next();
 				final int typeID = mv.getType();
-				final ListIterator mit = mv.listIterator();
+				final ListIterator<CellCntrMarker> mit = mv.listIterator();
 				while (mit.hasNext()) {
-					final CellCntrMarker m = (CellCntrMarker) mit.next();
+					final CellCntrMarker m = mit.next();
 					if (m.getZ() == i) {
 						final int xM = m.getX();
 						final int yM = m.getY();
@@ -248,11 +250,11 @@ public class CellCntrImageCanvas extends ImageCanvas {
 		}
 	}
 
-	public Vector getTypeVector() {
+	public Vector<CellCntrMarkerVector> getTypeVector() {
 		return typeVector;
 	}
 
-	public void setTypeVector(final Vector typeVector) {
+	public void setTypeVector(final Vector<CellCntrMarkerVector> typeVector) {
 		this.typeVector = typeVector;
 	}
 

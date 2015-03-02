@@ -34,7 +34,7 @@ import java.util.Vector;
  *
  * @author Kurt De Vos
  */
-public class CellCntrMarkerVector extends Vector {
+public class CellCntrMarkerVector extends Vector<CellCntrMarker> {
 
 	private int type;
 	private Color color;
@@ -51,7 +51,7 @@ public class CellCntrMarkerVector extends Vector {
 	}
 
 	public CellCntrMarker getMarker(final int n) {
-		return (CellCntrMarker) get(n);
+		return get(n);
 	}
 
 	public int getVectorIndex(final CellCntrMarker marker) {
@@ -115,17 +115,17 @@ public class CellCntrMarkerVector extends Vector {
 	public CellCntrMarker getMarkerFromPosition(final Point p,
 		final int sliceIndex)
 	{
-		final Vector v = new Vector();
-		final ListIterator it = this.listIterator();
+		final Vector<CellCntrMarker> v = new Vector<CellCntrMarker>();
+		final ListIterator<CellCntrMarker> it = this.listIterator();
 		while (it.hasNext()) {
-			final CellCntrMarker m = (CellCntrMarker) it.next();
+			final CellCntrMarker m = it.next();
 			if (m.getZ() == sliceIndex) {
 				v.add(m);
 			}
 		}
-		CellCntrMarker currentsmallest = (CellCntrMarker) v.get(0);
+		CellCntrMarker currentsmallest = v.get(0);
 		for (int i = 1; i < v.size(); i++) {
-			final CellCntrMarker m2 = (CellCntrMarker) v.get(i);
+			final CellCntrMarker m2 = v.get(i);
 			final Point p1 =
 				new Point(currentsmallest.getX(), currentsmallest.getY());
 			final Point p2 = new Point(m2.getX(), m2.getY());

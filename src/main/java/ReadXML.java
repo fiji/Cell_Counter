@@ -89,8 +89,9 @@ public class ReadXML {
 		return null;
 	}
 
-	public Vector readMarkerData() {
-		final Vector typeVector = new Vector();
+	public Vector<CellCntrMarkerVector> readMarkerData() {
+		final Vector<CellCntrMarkerVector> typeVector =
+			new Vector<CellCntrMarkerVector>();
 
 		final NodeList markerTypeNodeList = getNodeListFromTag(doc, "Marker_Type");
 		for (int i = 0; i < markerTypeNodeList.getLength(); i++) {

@@ -27,6 +27,7 @@ import ij.ImagePlus;
 import ij.ImageStack;
 import ij.WindowManager;
 import ij.gui.ImageWindow;
+import ij.gui.Roi;
 import ij.gui.StackWindow;
 import ij.process.ImageProcessor;
 
@@ -80,9 +81,9 @@ public class CellCounter extends JFrame implements ActionListener, ItemListener
 	private static final String EXPORTIMG = "Export Image";
 	private static final String MEASURE = "Measure...";
 
-	private Vector typeVector;
-	private Vector dynRadioVector;
-	private final Vector txtFieldVector;
+	private Vector<CellCntrMarkerVector> typeVector;
+	private Vector<JRadioButton> dynRadioVector;
+	private final Vector<JTextField> txtFieldVector;
 	private CellCntrMarkerVector markerVector;
 	private CellCntrMarkerVector currentMarkerVector;
 
@@ -127,9 +128,9 @@ public class CellCounter extends JFrame implements ActionListener, ItemListener
 			IJ.showMessage("You are using a pre 1.4 version of java, exporting and loading marker data is disabled");
 		}
 		setResizable(false);
-		typeVector = new Vector();
-		txtFieldVector = new Vector();
-		dynRadioVector = new Vector();
+		typeVector = new Vector<CellCntrMarkerVector>();
+		txtFieldVector = new Vector<JTextField>();
+		dynRadioVector = new Vector<JRadioButton>();
 		initGUI();
 		populateTxtFields();
 		instance = this;
@@ -432,13 +433,12 @@ public class CellCounter extends JFrame implements ActionListener, ItemListener
 	}
 
 	void populateTxtFields() {
-		final ListIterator it = typeVector.listIterator();
+		final ListIterator<CellCntrMarkerVector> it = typeVector.listIterator();
 		while (it.hasNext()) {
 			final int index = it.nextIndex();
-			final CellCntrMarkerVector markerVector =
-				(CellCntrMarkerVector) it.next();
+			final CellCntrMarkerVector markerVector = it.next();
 			final int count = markerVector.size();
-			final JTextField tArea = (JTextField) txtFieldVector.get(index);
+			final JTextField tArea = txtFieldVector.get(index);
 			tArea.setText("" + count);
 		}
 		validateLayout();
@@ -474,7 +474,8 @@ public class CellCounter extends JFrame implements ActionListener, ItemListener
 			ip.resetRoi();
 			if (keepOriginal) ip = ip.crop();
 			counterImg = new ImagePlus("Counter Window - " + img.getTitle(), ip);
-			final Vector displayList =
+			@SuppressWarnings("unchecked")
+			final Vector<Roi> displayList =
 				v139t ? img.getCanvas().getDisplayList() : null;
 			ic = new CellCntrImageCanvas(counterImg, typeVector, this, displayList);
 			new ImageWindow(counterImg, ic);
@@ -498,7 +499,8 @@ public class CellCounter extends JFrame implements ActionListener, ItemListener
 				((CompositeImage) counterImg).copyLuts(img);
 			}
 			counterImg.setOpenAsHyperStack(img.isHyperStack());
-			final Vector displayList =
+			@SuppressWarnings("unchecked")
+			final Vector<Roi> displayList =
 				v139t ? img.getCanvas().getDisplayList() : null;
 			ic = new CellCntrImageCanvas(counterImg, typeVector, this, displayList);
 			new StackWindow(counterImg, ic);
@@ -544,15 +546,14 @@ public class CellCounter extends JFrame implements ActionListener, ItemListener
 		}
 		else if (command.compareTo(REMOVE) == 0) {
 			if (dynRadioVector.size() > 1) {
-				final JRadioButton rbutton =
-					(JRadioButton) dynRadioVector.lastElement();
+				final JRadioButton rbutton = dynRadioVector.lastElement();
 				dynButtonPanel.remove(rbutton);
 				radioGrp.remove(rbutton);
 				dynRadioVector.removeElementAt(dynRadioVector.size() - 1);
 				dynGrid.setRows(dynRadioVector.size());
 			}
 			if (txtFieldVector.size() > 1) {
-				final JTextField field = (JTextField) txtFieldVector.lastElement();
+				final JTextField field = txtFieldVector.lastElement();
 				dynTxtPanel.remove(field);
 				txtFieldVector.removeElementAt(txtFieldVector.size() - 1);
 			}
@@ -575,7 +576,7 @@ public class CellCounter extends JFrame implements ActionListener, ItemListener
 				Integer.parseInt(command.substring(command.indexOf(" ") + 1, command
 					.length()));
 			// ic.setDelmode(false); // just in case
-			currentMarkerVector = (CellCntrMarkerVector) typeVector.get(index - 1);
+			currentMarkerVector = typeVector.get(index - 1);
 			ic.setCurrentMarkerVector(currentMarkerVector);
 		}
 		else if (command.compareTo(DELETE) == 0) {
@@ -651,9 +652,9 @@ public class CellCounter extends JFrame implements ActionListener, ItemListener
 		if (typeVector.size() < 1) {
 			return;
 		}
-		final ListIterator mit = typeVector.listIterator();
+		final ListIterator<CellCntrMarkerVector> mit = typeVector.listIterator();
 		while (mit.hasNext()) {
-			final CellCntrMarkerVector mv = (CellCntrMarkerVector) mit.next();
+			final CellCntrMarkerVector mv = mit.next();
 			mv.clear();
 		}
 		if (ic != null) ic.repaint();
@@ -663,9 +664,9 @@ public class CellCounter extends JFrame implements ActionListener, ItemListener
 		String labels = "Slice\t";
 		final boolean isStack = counterImg.getStackSize() > 1;
 		// add the types according to the button vector!!!!
-		final ListIterator it = dynRadioVector.listIterator();
+		final ListIterator<JRadioButton> it = dynRadioVector.listIterator();
 		while (it.hasNext()) {
-			final JRadioButton button = (JRadioButton) it.next();
+			final JRadioButton button = it.next();
 			final String str = button.getText(); // System.out.println(str);
 			labels = labels.concat(str + "\t");
 		}
@@ -674,15 +675,16 @@ public class CellCounter extends JFrame implements ActionListener, ItemListener
 		if (isStack) {
 			for (int slice = 1; slice <= counterImg.getStackSize(); slice++) {
 				results = "";
-				final ListIterator mit = typeVector.listIterator();
+				final ListIterator<CellCntrMarkerVector> mit =
+					typeVector.listIterator();
 				final int types = typeVector.size();
 				final int[] typeTotals = new int[types];
 				while (mit.hasNext()) {
 					final int type = mit.nextIndex();
-					final CellCntrMarkerVector mv = (CellCntrMarkerVector) mit.next();
-					final ListIterator tit = mv.listIterator();
+					final CellCntrMarkerVector mv = mit.next();
+					final ListIterator<CellCntrMarker> tit = mv.listIterator();
 					while (tit.hasNext()) {
-						final CellCntrMarker m = (CellCntrMarker) tit.next();
+						final CellCntrMarker m = tit.next();
 						if (m.getZ() == slice) {
 							typeTotals[type]++;
 						}
@@ -697,9 +699,9 @@ public class CellCounter extends JFrame implements ActionListener, ItemListener
 			IJ.write("");
 		}
 		results = "Total\t";
-		final ListIterator mit = typeVector.listIterator();
+		final ListIterator<CellCntrMarkerVector> mit = typeVector.listIterator();
 		while (mit.hasNext()) {
-			final CellCntrMarkerVector mv = (CellCntrMarkerVector) mit.next();
+			final CellCntrMarkerVector mv = mit.next();
 			final int count = mv.size();
 			results = results.concat(count + "\t");
 		}
@@ -713,32 +715,30 @@ public class CellCounter extends JFrame implements ActionListener, ItemListener
 		final String storedfilename =
 			rxml.readImgProperties(ReadXML.IMAGE_FILE_PATH);
 		if (storedfilename.equals(img.getTitle())) {
-			final Vector loadedvector = rxml.readMarkerData();
+			final Vector<CellCntrMarkerVector> loadedvector = rxml.readMarkerData();
 			typeVector = loadedvector;
 			ic.setTypeVector(typeVector);
 			final int index =
 				Integer.parseInt(rxml.readImgProperties(ReadXML.CURRENT_TYPE));
-			currentMarkerVector = (CellCntrMarkerVector) typeVector.get(index);
+			currentMarkerVector = typeVector.get(index);
 			ic.setCurrentMarkerVector(currentMarkerVector);
 
 			while (dynRadioVector.size() > typeVector.size()) {
 				if (dynRadioVector.size() > 1) {
-					final JRadioButton rbutton =
-						(JRadioButton) dynRadioVector.lastElement();
+					final JRadioButton rbutton = dynRadioVector.lastElement();
 					dynButtonPanel.remove(rbutton);
 					radioGrp.remove(rbutton);
 					dynRadioVector.removeElementAt(dynRadioVector.size() - 1);
 					dynGrid.setRows(dynRadioVector.size());
 				}
 				if (txtFieldVector.size() > 1) {
-					final JTextField field = (JTextField) txtFieldVector.lastElement();
+					final JTextField field = txtFieldVector.lastElement();
 					dynTxtPanel.remove(field);
 					txtFieldVector.removeElementAt(txtFieldVector.size() - 1);
 				}
 			}
-			final JRadioButton butt = (JRadioButton) (dynRadioVector.get(index));
+			final JRadioButton butt = dynRadioVector.get(index);
 			butt.setSelected(true);
-
 		}
 		else {
 			IJ.error("These Markers do not belong to the current image");
@@ -785,11 +785,11 @@ public class CellCounter extends JFrame implements ActionListener, ItemListener
 		return filePathComponents[PATH] + filePathComponents[FILE];
 	}
 
-	public Vector getButtonVector() {
+	public Vector<JRadioButton> getButtonVector() {
 		return dynRadioVector;
 	}
 
-	public void setButtonVector(final Vector buttonVector) {
+	public void setButtonVector(final Vector<JRadioButton> buttonVector) {
 		this.dynRadioVector = buttonVector;
 	}
 
@@ -808,11 +808,9 @@ public class CellCounter extends JFrame implements ActionListener, ItemListener
 		final int index = Integer.parseInt(type) - 1;
 		final int buttons = instance.dynRadioVector.size();
 		if (index < 0 || index >= buttons) return;
-		final JRadioButton rbutton =
-			(JRadioButton) instance.dynRadioVector.elementAt(index);
+		final JRadioButton rbutton = instance.dynRadioVector.elementAt(index);
 		instance.radioGrp.setSelected(rbutton.getModel(), true);
-		instance.currentMarkerVector =
-			(CellCntrMarkerVector) instance.typeVector.get(index);
+		instance.currentMarkerVector = instance.typeVector.get(index);
 		instance.ic.setCurrentMarkerVector(instance.currentMarkerVector);
 	}
 

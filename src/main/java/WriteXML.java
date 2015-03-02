@@ -62,8 +62,8 @@ public class WriteXML {
 		}
 	}
 
-	public boolean writeXML(final String imgFilename, final Vector typeVector,
-		final int currentType)
+	public boolean writeXML(final String imgFilename,
+		final Vector<CellCntrMarkerVector> typeVector, final int currentType)
 	{
 		try {
 			out.write("<?xml version=\"1.0\" ");
@@ -79,16 +79,15 @@ public class WriteXML {
 			// write the marker data
 			out.write(" <Marker_Data>\r\n");
 			out.write("     <Current_Type>" + currentType + "</Current_Type>\r\n");
-			final ListIterator it = typeVector.listIterator();
+			final ListIterator<CellCntrMarkerVector> it = typeVector.listIterator();
 			while (it.hasNext()) {
-				final CellCntrMarkerVector markerVector =
-					(CellCntrMarkerVector) it.next();
+				final CellCntrMarkerVector markerVector = it.next();
 				final int type = markerVector.getType();
 				out.write("     <Marker_Type>\r\n");
 				out.write("         <Type>" + type + "</Type>\r\n");
-				final ListIterator lit = markerVector.listIterator();
+				final ListIterator<CellCntrMarker> lit = markerVector.listIterator();
 				while (lit.hasNext()) {
-					final CellCntrMarker marker = (CellCntrMarker) lit.next();
+					final CellCntrMarker marker = lit.next();
 					final int x = marker.getX();
 					final int y = marker.getY();
 					final int z = marker.getZ();
