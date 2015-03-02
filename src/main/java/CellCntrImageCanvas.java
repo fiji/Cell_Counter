@@ -143,27 +143,6 @@ public class CellCntrImageCanvas extends ImageCanvas {
 		double xM = 0;
 		double yM = 0;
 
-		/*
-		double magnification = super.getMagnification();
-		
-		try {
-		    if (imageUpdated) {
-		        imageUpdated = false;
-		        img.updateImage();
-		    }
-		    Image image = img.getImage();
-		    if (image!=null)
-		        g.drawImage(image, 0, 0, (int)(srcRect.width*magnification),
-		                (int)(srcRect.height*magnification),
-		                srcRect.x, srcRect.y, srcRect.x+srcRect.width,
-		                srcRect.y+srcRect.height, null);
-		    if (roi != null)
-		        roi.draw(g);
-		} catch(OutOfMemoryError e) {
-		    IJ.outOfMemory("Paint "+e.getMessage());
-		}
-		*/
-
 		final Graphics2D g2 = (Graphics2D) g;
 		g2.setStroke(new BasicStroke(1f));
 		g2.setFont(font);
