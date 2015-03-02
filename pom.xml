@@ -53,5 +53,19 @@
 		</dependency>
 	</dependencies>
 
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>license-maven-plugin</artifactId>
+				<configuration>
+					<licenseName>gpl_v3</licenseName>
+					<organizationName>Kurt De Vos and Board of Regents of the
+University of Wisconsin-Madison.</organizationName>
+					<projectName>Cell Counter plugin for ImageJ.</projectName>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
 
 </project>
