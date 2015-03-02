@@ -15,6 +15,17 @@
 	<name>plugins/Cell_Counter.jar</name>
 	<description />
 
+	<developers>
+		<developer>
+			<name>Kurt De Vos</name>
+			<email>kurt.devos@iop.kcl.ac.uk</email>
+			<organization>University of Sheffield, Academic Neurology</organization>
+			<roles>
+				<role>author</role>
+			</roles>
+		</developer>
+	</developers>
+
 	<scm>
 		<connection>scm:git:git://github.com/fiji/Cell_Counter</connection>
 		<developerConnection>scm:git:git@github.com:fiji/Cell_Counter</developerConnection>
@@ -42,15 +53,5 @@
 		</dependency>
 	</dependencies>
 
-	<developers>
-		<developer>
-			<name>Kurt De Vos</name>
-			<email>kurt.devos@iop.kcl.ac.uk</email>
-			<organization>University of Sheffield, Academic Neurology</organization>
-			<roles>
-				<role>author</role>
-			</roles>
-		</developer>
-	</developers>
 
 </project>
