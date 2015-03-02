@@ -117,16 +117,10 @@ public class CellCounter extends JFrame implements ActionListener, ItemListener
 
 	private GridLayout dynGrid;
 
-	private final boolean isJava14;
-
 	static CellCounter instance;
 
 	public CellCounter() {
 		super("Cell Counter");
-		isJava14 = IJ.isJava14();
-		if (!isJava14) {
-			IJ.showMessage("You are using a pre 1.4 version of java, exporting and loading marker data is disabled");
-		}
 		setResizable(false);
 		typeVector = new Vector<CellCntrMarkerVector>();
 		txtFieldVector = new Vector<JTextField>();
@@ -375,7 +369,6 @@ public class CellCounter extends JFrame implements ActionListener, ItemListener
 		gbc.gridx = 0;
 		gbc.gridwidth = GridBagConstraints.REMAINDER;
 		loadButton = makeButton(LOADMARKERS, "Load markers from file");
-		if (!isJava14) loadButton.setEnabled(false);
 		gb.setConstraints(loadButton, gbc);
 		statButtonPanel.add(loadButton);
 
@@ -518,7 +511,7 @@ public class CellCounter extends JFrame implements ActionListener, ItemListener
 		resultsButton.setEnabled(true);
 		deleteButton.setEnabled(true);
 		resetButton.setEnabled(true);
-		if (isJava14) exportButton.setEnabled(true);
+		exportButton.setEnabled(true);
 		exportimgButton.setEnabled(true);
 		measureButton.setEnabled(true);
 	}
