@@ -81,11 +81,14 @@ public class CellCounter extends JFrame implements ActionListener, ItemListener
 	private static final String EXPORTIMG = "Export Image";
 	private static final String MEASURE = "Measure...";
 
+	private static final String TYPE_COMMAND_PREFIX = "type";
+
 	private Vector<CellCntrMarkerVector> typeVector;
 	private Vector<JRadioButton> dynRadioVector;
 	private final Vector<JTextField> txtFieldVector;
 	private CellCntrMarkerVector markerVector;
 	private CellCntrMarkerVector currentMarkerVector;
+	private int currentMarkerIndex;
 
 	private JPanel dynPanel;
 	private JPanel dynButtonPanel;
@@ -439,6 +442,7 @@ public class CellCounter extends JFrame implements ActionListener, ItemListener
 
 	private JRadioButton makeDynRadioButton(final int id) {
 		final JRadioButton jrButton = new JRadioButton("Type " + id);
+		jrButton.setActionCommand(TYPE_COMMAND_PREFIX + id);
 		jrButton.addActionListener(this);
 		dynRadioVector.add(jrButton);
 		radioGrp.add(jrButton);
@@ -560,16 +564,15 @@ public class CellCounter extends JFrame implements ActionListener, ItemListener
 		else if (command.equals(INITIALIZE)) {
 			initializeImage();
 		}
-		else if (command.startsWith("Type")) { // COUNT
+		else if (command.startsWith(TYPE_COMMAND_PREFIX)) { // COUNT
+			currentMarkerIndex =
+				Integer.parseInt(command.substring(TYPE_COMMAND_PREFIX.length())) - 1;
 			if (ic == null) {
 				IJ.error("You need to initialize first");
 				return;
 			}
-			final int index =
-				Integer.parseInt(command.substring(command.indexOf(" ") + 1, command
-					.length()));
 			// ic.setDelmode(false); // just in case
-			currentMarkerVector = typeVector.get(index - 1);
+			currentMarkerVector = typeVector.get(currentMarkerIndex);
 			ic.setCurrentMarkerVector(currentMarkerVector);
 		}
 		else if (command.equals(DELETE)) {
