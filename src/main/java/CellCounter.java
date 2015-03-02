@@ -529,7 +529,7 @@ public class CellCounter extends JFrame implements ActionListener, ItemListener
 	public void actionPerformed(final ActionEvent event) {
 		final String command = event.getActionCommand();
 
-		if (command.compareTo(ADD) == 0) {
+		if (command.equals(ADD)) {
 			final int i = dynRadioVector.size() + 1;
 			dynGrid.setRows(i);
 			dynButtonPanel.add(makeDynRadioButton(i));
@@ -537,7 +537,7 @@ public class CellCounter extends JFrame implements ActionListener, ItemListener
 
 			if (ic != null) ic.setTypeVector(typeVector);
 		}
-		else if (command.compareTo(REMOVE) == 0) {
+		else if (command.equals(REMOVE)) {
 			if (dynRadioVector.size() > 1) {
 				final JRadioButton rbutton = dynRadioVector.lastElement();
 				dynButtonPanel.remove(rbutton);
@@ -557,7 +557,7 @@ public class CellCounter extends JFrame implements ActionListener, ItemListener
 
 			if (ic != null) ic.setTypeVector(typeVector);
 		}
-		else if (command.compareTo(INITIALIZE) == 0) {
+		else if (command.equals(INITIALIZE)) {
 			initializeImage();
 		}
 		else if (command.startsWith("Type")) { // COUNT
@@ -572,27 +572,27 @@ public class CellCounter extends JFrame implements ActionListener, ItemListener
 			currentMarkerVector = typeVector.get(index - 1);
 			ic.setCurrentMarkerVector(currentMarkerVector);
 		}
-		else if (command.compareTo(DELETE) == 0) {
+		else if (command.equals(DELETE)) {
 			ic.removeLastMarker();
 		}
-		else if (command.compareTo(RESET) == 0) {
+		else if (command.equals(RESET)) {
 			reset();
 		}
-		else if (command.compareTo(RESULTS) == 0) {
+		else if (command.equals(RESULTS)) {
 			report();
 		}
-		else if (command.compareTo(EXPORTMARKERS) == 0) {
+		else if (command.equals(EXPORTMARKERS)) {
 			exportMarkers();
 		}
-		else if (command.compareTo(LOADMARKERS) == 0) {
+		else if (command.equals(LOADMARKERS)) {
 			if (ic == null) initializeImage();
 			loadMarkers();
 			validateLayout();
 		}
-		else if (command.compareTo(EXPORTIMG) == 0) {
+		else if (command.equals(EXPORTIMG)) {
 			ic.imageWithMarkers().show();
 		}
-		else if (command.compareTo(MEASURE) == 0) {
+		else if (command.equals(MEASURE)) {
 			measure();
 		}
 		if (ic != null) ic.repaint();
