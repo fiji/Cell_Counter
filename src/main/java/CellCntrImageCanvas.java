@@ -133,14 +133,12 @@ public class CellCntrImageCanvas extends ImageCanvas {
 		super.mouseClicked(e);
 	}
 
-	private Point point;
 	private Rectangle srcRect = new Rectangle(0, 0, 0, 0);
 
 	@Override
 	public void paint(final Graphics g) {
 		super.paint(g);
 		srcRect = getSrcRect();
-		final Roi roi = img.getRoi();
 		double xM = 0;
 		double yM = 0;
 

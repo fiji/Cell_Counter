@@ -25,7 +25,6 @@
 
 import java.awt.Color;
 import java.awt.Point;
-import java.awt.geom.Point2D;
 import java.util.ListIterator;
 import java.util.Vector;
 
@@ -99,17 +98,6 @@ public class CellCntrMarkerVector extends Vector<CellCntrMarker> {
 				}
 				return c;
 		}
-	}
-
-	private boolean isCloser(final CellCntrMarker m1, final CellCntrMarker m2,
-		final Point p)
-	{
-		final Point2D p1 = new Point2D.Double(m1.getX(), m1.getY());
-		final Point2D p2 = new Point2D.Double(m1.getX(), m2.getY());
-		System.out.println("px = " + p.x + " py = " + p.y);
-		System.out.println(Math.abs(p1.distance(p)) + " < " +
-			Math.abs(p2.distance(p)));
-		return (Math.abs(p1.distance(p)) < Math.abs(p2.distance(p)));
 	}
 
 	public CellCntrMarker getMarkerFromPosition(final Point p,

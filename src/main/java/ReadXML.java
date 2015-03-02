@@ -132,18 +132,6 @@ public class ReadXML {
 		return str;
 	}
 
-	private String[] readMarker(final NodeList nodeList, final int index)
-		throws NullPointerException
-	{
-		final Element element = getElement(nodeList, index);
-		debugReport("Element = " + element.getNodeName());
-		final NodeList elementNodeList = getChildNodes(element);
-		final String str[] =
-			{ getValue(elementNodeList, 0), getValue(elementNodeList, 1),
-				getValue(elementNodeList, 2) };
-		return str;
-	}
-
 	private String readSingleValue(final Document doc, final String elementName) {
 		NodeList nodeList = getNodeListFromTag(doc, elementName);
 		final Element element = getElement(nodeList, 0);
