@@ -68,6 +68,7 @@ public class CellCounter extends JFrame implements ActionListener, ItemListener
 
 	private static final String ADD = "Add";
 	private static final String REMOVE = "Remove";
+	private static final String RENAME = "Rename";
 	private static final String INITIALIZE = "Initialize";
 	private static final String RESULTS = "Results";
 	private static final String DELETE = "Delete";
@@ -102,6 +103,7 @@ public class CellCounter extends JFrame implements ActionListener, ItemListener
 	private JSeparator separator;
 	private JButton addButton;
 	private JButton removeButton;
+	private JButton renameButton;
 	private JButton initializeButton;
 	private JButton resultsButton;
 	private JButton deleteButton;
@@ -256,6 +258,16 @@ public class CellCounter extends JFrame implements ActionListener, ItemListener
 		removeButton = makeButton(REMOVE, "remove last counter type");
 		gb.setConstraints(removeButton, gbc);
 		statButtonPanel.add(removeButton);
+
+		gbc = new GridBagConstraints();
+		gbc.anchor = GridBagConstraints.NORTHWEST;
+		gbc.fill = GridBagConstraints.BOTH;
+		gbc.gridx = 0;
+		gbc.gridwidth = GridBagConstraints.REMAINDER;
+		renameButton = makeButton(RENAME, "rename selected counter type");
+		renameButton.setEnabled(false);
+		gb.setConstraints(renameButton, gbc);
+		statButtonPanel.add(renameButton);
 
 		gbc = new GridBagConstraints();
 		gbc.anchor = GridBagConstraints.NORTHWEST;
@@ -512,6 +524,7 @@ public class CellCounter extends JFrame implements ActionListener, ItemListener
 		if (counterImg.getStackSize() > 1) showAllCheck.setEnabled(true);
 		addButton.setEnabled(true);
 		removeButton.setEnabled(true);
+		renameButton.setEnabled(true);
 		resultsButton.setEnabled(true);
 		deleteButton.setEnabled(true);
 		resetButton.setEnabled(true);
@@ -560,6 +573,16 @@ public class CellCounter extends JFrame implements ActionListener, ItemListener
 			validateLayout();
 
 			if (ic != null) ic.setTypeVector(typeVector);
+		}
+		else if (command.equals(RENAME)) {
+			if (currentMarkerIndex < 0) return; // no counter type selected
+			final JRadioButton button = dynRadioVector.get(currentMarkerIndex);
+			final String name =
+				IJ.getString("Enter new counter name", button.getText());
+			if (name == null || name.isEmpty()) return;
+			radioGrp.remove(button);
+			button.setText(name);
+			radioGrp.add(button);
 		}
 		else if (command.equals(INITIALIZE)) {
 			initializeImage();
