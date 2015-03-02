@@ -1,6 +1,6 @@
 /*
  *
- * @author Kurt De Vos � 2005
+ * @author Kurt De Vos (C) 2005
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
  * as published by the Free Software Foundation (http://www.gnu.org/licenses/gpl.txt )
