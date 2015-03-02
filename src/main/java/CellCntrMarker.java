@@ -29,42 +29,42 @@
  * @author Kurt De Vos
  */
 public class CellCntrMarker {
-    private int x;
-    private int y;
-    private int z;
-    
-    /** Creates a new instance of Marker */
-    public CellCntrMarker() {
-    }
-    
-    public CellCntrMarker(int x, int y, int z) {
-        this.x=x;
-        this.y=y;
-        this.z=z;
-    }
 
-    public int getX() {
-        return x;
-    }
+	private int x;
+	private int y;
+	private int z;
 
-    public void setX(int x) {
-        this.x = x;
-    }
+	/** Creates a new instance of Marker */
+	public CellCntrMarker() {}
 
-    public int getY() {
-        return y;
-    }
+	public CellCntrMarker(final int x, final int y, final int z) {
+		this.x = x;
+		this.y = y;
+		this.z = z;
+	}
 
-    public void setY(int y) {
-        this.y = y;
-    }
+	public int getX() {
+		return x;
+	}
 
-    public int getZ() {
-        return z;
-    }
+	public void setX(final int x) {
+		this.x = x;
+	}
 
-    public void setZ(int z) {
-        this.z = z;
-    }
+	public int getY() {
+		return y;
+	}
+
+	public void setY(final int y) {
+		this.y = y;
+	}
+
+	public int getZ() {
+		return z;
+	}
+
+	public void setZ(final int z) {
+		this.z = z;
+	}
 
 }

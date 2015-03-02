@@ -26,18 +26,17 @@
 import ij.plugin.frame.PlugInFrame;
 
 /**
- *
  * @author Kurt De Vos
  */
-public class Cell_Counter extends PlugInFrame{
-    
-    /** Creates a new instance of Cell_Counter */
-    public Cell_Counter() {
-         super("Cell Counter");
-         new CellCounter();
-    }
-    
-    public void run(String arg){
-    }
-  
+public class Cell_Counter extends PlugInFrame {
+
+	/** Creates a new instance of Cell_Counter */
+	public Cell_Counter() {
+		super("Cell Counter");
+		new CellCounter();
+	}
+
+	@Override
+	public void run(final String arg) {}
+
 }

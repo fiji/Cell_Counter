@@ -29,14 +29,15 @@ import ij.gui.ImageCanvas;
 import ij.gui.Roi;
 import ij.gui.Toolbar;
 import ij.process.ImageProcessor;
+
 import java.awt.BasicStroke;
 import java.awt.Cursor;
+import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.Point;
 import java.awt.Rectangle;
-import java.awt.Font;
 import java.awt.event.MouseEvent;
 import java.util.ListIterator;
 import java.util.Vector;
@@ -46,241 +47,265 @@ import java.util.Vector;
  *
  * @author Kurt De Vos
  */
-public class CellCntrImageCanvas extends ImageCanvas{
-    private Vector typeVector;
-    private CellCntrMarkerVector currentMarkerVector;
-    private CellCounter cc;
-    private ImagePlus img;
-    private boolean delmode = false;
-    private boolean showNumbers = true;
-    private boolean showAll = false;
-    private Font font = new Font("SansSerif", Font.PLAIN, 10);
-    
-    /** Creates a new instance of CellCntrImageCanvas */
-    public CellCntrImageCanvas(ImagePlus img, Vector typeVector, CellCounter cc, Vector displayList) {
-        super(img);
-        this.img=img;
-        this.typeVector = typeVector;
-        this.cc = cc;
-        if (displayList!=null)
-            this.setDisplayList(displayList);
-    }
-    
-    public void mousePressed(MouseEvent e) {
-        if (IJ.spaceBarDown() || Toolbar.getToolId()==Toolbar.MAGNIFIER || Toolbar.getToolId()==Toolbar.HAND) {
-            super.mousePressed(e);
-            return;
-        }
-        
-        if (currentMarkerVector==null){
-            IJ.error("Select a counter type first!");
-            return;
-        }
-        
-        int x = super.offScreenX(e.getX());
-        int y = super.offScreenY(e.getY());
-        if (!delmode){
-            CellCntrMarker m = new CellCntrMarker(x, y, img.getCurrentSlice());
-            currentMarkerVector.addMarker(m);
-        }else{
-            CellCntrMarker m = currentMarkerVector.getMarkerFromPosition(new Point(x,y) ,img.getCurrentSlice());
-            currentMarkerVector.remove(m);
-        }
-        repaint();
-        cc.populateTxtFields();
-    }
-    public void mouseReleased(MouseEvent e) {
-        super.mouseReleased(e);
-    }
-    public void mouseMoved(MouseEvent e) {
-        super.mouseMoved(e);
-    }
-    public void mouseExited(MouseEvent e) {
-        super.mouseExited(e);
-    }
-    public void mouseEntered(MouseEvent e) {
-        super.mouseEntered(e);
-        if (!IJ.spaceBarDown() | Toolbar.getToolId()!=Toolbar.MAGNIFIER | Toolbar.getToolId()!=Toolbar.HAND)
-            setCursor(Cursor.getPredefinedCursor(Cursor.CROSSHAIR_CURSOR));
-    }
-    public void mouseDragged(MouseEvent e) {
-        super.mouseDragged(e);
-    }
-    public void mouseClicked(MouseEvent e) {
-        super.mouseClicked(e);
-    }
-    
-    private Point point;
-    private Rectangle srcRect = new Rectangle(0, 0, 0, 0);
-    public void paint(Graphics g){
-        super.paint(g);
-        srcRect = getSrcRect();
-        Roi roi = img.getRoi();
-        double xM=0;
-        double yM=0;
-        
-        /*
-        double magnification = super.getMagnification();
-        
-        try {
-            if (imageUpdated) {
-                imageUpdated = false;
-                img.updateImage();
-            }
-            Image image = img.getImage();
-            if (image!=null)
-                g.drawImage(image, 0, 0, (int)(srcRect.width*magnification),
-                        (int)(srcRect.height*magnification),
-                        srcRect.x, srcRect.y, srcRect.x+srcRect.width,
-                        srcRect.y+srcRect.height, null);
-            if (roi != null)
-                roi.draw(g);
-        } catch(OutOfMemoryError e) {
-            IJ.outOfMemory("Paint "+e.getMessage());
-        }
-        */
-        
-        Graphics2D g2 = (Graphics2D)g;
-        g2.setStroke(new BasicStroke(1f));
-        g2.setFont(font);
-        
-        ListIterator it = typeVector.listIterator();
-        while(it.hasNext()){
-            CellCntrMarkerVector mv = (CellCntrMarkerVector)it.next();
-            int typeID = mv.getType();
-            g2.setColor(mv.getColor());
-            ListIterator mit = mv.listIterator();
-            while(mit.hasNext()){
-                CellCntrMarker m = (CellCntrMarker)mit.next();
-                boolean sameSlice = m.getZ()==img.getCurrentSlice();
-                if (sameSlice || showAll){
-                    xM = ((m.getX()-srcRect.x)*magnification);
-                    yM = ((m.getY()-srcRect.y)*magnification);
-                    if (sameSlice)
-                    	g2.fillOval((int)xM-2, (int)yM-2,4,4);
-                    else
-                    	g2.drawOval((int)xM-2, (int)yM-2,4,4);
-                    if (showNumbers)
-                        g2.drawString(Integer.toString(typeID), (int)xM+3, (int)yM-3);
-                }
-            }
-        }
-    }
-    
-    public void removeLastMarker(){
-        currentMarkerVector.removeLastMarker();
-        repaint();
-        cc.populateTxtFields();
-    }
-    public ImagePlus imageWithMarkers(){
-        Image image = this.createImage(img.getWidth(),img.getHeight());
-        Graphics gr = image.getGraphics();
-        
-        double xM=0;
-        double yM=0;
-        
-        try {
-            if (imageUpdated) {
-                imageUpdated = false;
-                img.updateImage();
-            }
-            Image image2 = img.getImage();
-            if (image!=null)
-                gr.drawImage(image2, 0, 0, img.getWidth(),img.getHeight(),null);
-        } catch(OutOfMemoryError e) {
-            IJ.outOfMemory("Paint "+e.getMessage());
-        }
-        
-        Graphics2D g2r = (Graphics2D)gr;
-        g2r.setStroke(new BasicStroke(1f));
-        
-        ListIterator it = typeVector.listIterator();
-        while(it.hasNext()){
-            CellCntrMarkerVector mv = (CellCntrMarkerVector)it.next();
-            int typeID = mv.getType();
-            g2r.setColor(mv.getColor());
-            ListIterator mit = mv.listIterator();
-            while(mit.hasNext()){
-                CellCntrMarker m = (CellCntrMarker)mit.next();
-                if (m.getZ()==img.getCurrentSlice()){
-                    xM = m.getX();
-                    yM = m.getY();
-                    g2r.fillOval((int)xM-2, (int)yM-2,4,4);
-                    if (showNumbers)
-                        g2r.drawString(Integer.toString(typeID), (int)xM+3, (int)yM-3);
-                }
-            }
-        }
+public class CellCntrImageCanvas extends ImageCanvas {
 
-        Vector displayList = getDisplayList();
-         if (displayList!=null && displayList.size()==1) {
-             Roi roi = (Roi)displayList.elementAt(0);
-             if (roi.getType()==Roi.COMPOSITE)
-                 roi.draw(gr);
-         }
-        
-        return new ImagePlus("Markers_"+img.getTitle(),image);
-    }
-    
-    public void measure(){
-        IJ.setColumnHeadings("Type\tSlice\tX\tY\tValue");
-        for (int i=1; i<=img.getStackSize(); i++){
-            img.setSlice(i);
-            ImageProcessor ip = img.getProcessor();
-        
-            ListIterator it = typeVector.listIterator();
-            while(it.hasNext()){
-                CellCntrMarkerVector mv = (CellCntrMarkerVector)it.next();
-                int typeID = mv.getType();
-                ListIterator mit = mv.listIterator();
-                while(mit.hasNext()){
-                    CellCntrMarker m = (CellCntrMarker)mit.next();
-                    if (m.getZ()==i){
-                        int xM = m.getX();
-                        int yM = m.getY();
-                        int zM = m.getZ();
-                        double value = ip.getPixelValue(xM,yM);
-                        IJ.write(typeID+"\t"+zM+"\t"+xM+"\t"+yM+"\t"+value);
-                    }
-                }
-            }
-        }
-    }
-    
-    public Vector getTypeVector() {
-        return typeVector;
-    }
-    
-    public void setTypeVector(Vector typeVector) {
-        this.typeVector = typeVector;
-    }
-    
-    public CellCntrMarkerVector getCurrentMarkerVector() {
-        return currentMarkerVector;
-    }
-    
-    public void setCurrentMarkerVector(CellCntrMarkerVector currentMarkerVector) {
-        this.currentMarkerVector = currentMarkerVector;
-    }
-    
-    public boolean isDelmode() {
-        return delmode;
-    }
-    
-    public void setDelmode(boolean delmode) {
-        this.delmode = delmode;
-    }
-    
-    public boolean isShowNumbers() {
-        return showNumbers;
-    }
+	private Vector typeVector;
+	private CellCntrMarkerVector currentMarkerVector;
+	private final CellCounter cc;
+	private final ImagePlus img;
+	private boolean delmode = false;
+	private boolean showNumbers = true;
+	private boolean showAll = false;
+	private final Font font = new Font("SansSerif", Font.PLAIN, 10);
 
-    public void setShowNumbers(boolean showNumbers) {
-        this.showNumbers = showNumbers;
-    }
-    
-    public void setShowAll(boolean showAll) {
-        this.showAll = showAll;
-    }
+	/** Creates a new instance of CellCntrImageCanvas */
+	public CellCntrImageCanvas(final ImagePlus img, final Vector typeVector,
+		final CellCounter cc, final Vector displayList)
+	{
+		super(img);
+		this.img = img;
+		this.typeVector = typeVector;
+		this.cc = cc;
+		if (displayList != null) this.setDisplayList(displayList);
+	}
+
+	@Override
+	public void mousePressed(final MouseEvent e) {
+		if (IJ.spaceBarDown() || Toolbar.getToolId() == Toolbar.MAGNIFIER ||
+			Toolbar.getToolId() == Toolbar.HAND)
+		{
+			super.mousePressed(e);
+			return;
+		}
+
+		if (currentMarkerVector == null) {
+			IJ.error("Select a counter type first!");
+			return;
+		}
+
+		final int x = super.offScreenX(e.getX());
+		final int y = super.offScreenY(e.getY());
+		if (!delmode) {
+			final CellCntrMarker m = new CellCntrMarker(x, y, img.getCurrentSlice());
+			currentMarkerVector.addMarker(m);
+		}
+		else {
+			final CellCntrMarker m =
+				currentMarkerVector.getMarkerFromPosition(new Point(x, y), img
+					.getCurrentSlice());
+			currentMarkerVector.remove(m);
+		}
+		repaint();
+		cc.populateTxtFields();
+	}
+
+	@Override
+	public void mouseReleased(final MouseEvent e) {
+		super.mouseReleased(e);
+	}
+
+	@Override
+	public void mouseMoved(final MouseEvent e) {
+		super.mouseMoved(e);
+	}
+
+	@Override
+	public void mouseExited(final MouseEvent e) {
+		super.mouseExited(e);
+	}
+
+	@Override
+	public void mouseEntered(final MouseEvent e) {
+		super.mouseEntered(e);
+		if (!IJ.spaceBarDown() | Toolbar.getToolId() != Toolbar.MAGNIFIER |
+			Toolbar.getToolId() != Toolbar.HAND) setCursor(Cursor
+			.getPredefinedCursor(Cursor.CROSSHAIR_CURSOR));
+	}
+
+	@Override
+	public void mouseDragged(final MouseEvent e) {
+		super.mouseDragged(e);
+	}
+
+	@Override
+	public void mouseClicked(final MouseEvent e) {
+		super.mouseClicked(e);
+	}
+
+	private Point point;
+	private Rectangle srcRect = new Rectangle(0, 0, 0, 0);
+
+	@Override
+	public void paint(final Graphics g) {
+		super.paint(g);
+		srcRect = getSrcRect();
+		final Roi roi = img.getRoi();
+		double xM = 0;
+		double yM = 0;
+
+		/*
+		double magnification = super.getMagnification();
+		
+		try {
+		    if (imageUpdated) {
+		        imageUpdated = false;
+		        img.updateImage();
+		    }
+		    Image image = img.getImage();
+		    if (image!=null)
+		        g.drawImage(image, 0, 0, (int)(srcRect.width*magnification),
+		                (int)(srcRect.height*magnification),
+		                srcRect.x, srcRect.y, srcRect.x+srcRect.width,
+		                srcRect.y+srcRect.height, null);
+		    if (roi != null)
+		        roi.draw(g);
+		} catch(OutOfMemoryError e) {
+		    IJ.outOfMemory("Paint "+e.getMessage());
+		}
+		*/
+
+		final Graphics2D g2 = (Graphics2D) g;
+		g2.setStroke(new BasicStroke(1f));
+		g2.setFont(font);
+
+		final ListIterator it = typeVector.listIterator();
+		while (it.hasNext()) {
+			final CellCntrMarkerVector mv = (CellCntrMarkerVector) it.next();
+			final int typeID = mv.getType();
+			g2.setColor(mv.getColor());
+			final ListIterator mit = mv.listIterator();
+			while (mit.hasNext()) {
+				final CellCntrMarker m = (CellCntrMarker) mit.next();
+				final boolean sameSlice = m.getZ() == img.getCurrentSlice();
+				if (sameSlice || showAll) {
+					xM = ((m.getX() - srcRect.x) * magnification);
+					yM = ((m.getY() - srcRect.y) * magnification);
+					if (sameSlice) g2.fillOval((int) xM - 2, (int) yM - 2, 4, 4);
+					else g2.drawOval((int) xM - 2, (int) yM - 2, 4, 4);
+					if (showNumbers) g2.drawString(Integer.toString(typeID),
+						(int) xM + 3, (int) yM - 3);
+				}
+			}
+		}
+	}
+
+	public void removeLastMarker() {
+		currentMarkerVector.removeLastMarker();
+		repaint();
+		cc.populateTxtFields();
+	}
+
+	public ImagePlus imageWithMarkers() {
+		final Image image = this.createImage(img.getWidth(), img.getHeight());
+		final Graphics gr = image.getGraphics();
+
+		double xM = 0;
+		double yM = 0;
+
+		try {
+			if (imageUpdated) {
+				imageUpdated = false;
+				img.updateImage();
+			}
+			final Image image2 = img.getImage();
+			if (image != null) gr.drawImage(image2, 0, 0, img.getWidth(), img
+				.getHeight(), null);
+		}
+		catch (final OutOfMemoryError e) {
+			IJ.outOfMemory("Paint " + e.getMessage());
+		}
+
+		final Graphics2D g2r = (Graphics2D) gr;
+		g2r.setStroke(new BasicStroke(1f));
+
+		final ListIterator it = typeVector.listIterator();
+		while (it.hasNext()) {
+			final CellCntrMarkerVector mv = (CellCntrMarkerVector) it.next();
+			final int typeID = mv.getType();
+			g2r.setColor(mv.getColor());
+			final ListIterator mit = mv.listIterator();
+			while (mit.hasNext()) {
+				final CellCntrMarker m = (CellCntrMarker) mit.next();
+				if (m.getZ() == img.getCurrentSlice()) {
+					xM = m.getX();
+					yM = m.getY();
+					g2r.fillOval((int) xM - 2, (int) yM - 2, 4, 4);
+					if (showNumbers) g2r.drawString(Integer.toString(typeID),
+						(int) xM + 3, (int) yM - 3);
+				}
+			}
+		}
+
+		final Vector displayList = getDisplayList();
+		if (displayList != null && displayList.size() == 1) {
+			final Roi roi = (Roi) displayList.elementAt(0);
+			if (roi.getType() == Roi.COMPOSITE) roi.draw(gr);
+		}
+
+		return new ImagePlus("Markers_" + img.getTitle(), image);
+	}
+
+	public void measure() {
+		IJ.setColumnHeadings("Type\tSlice\tX\tY\tValue");
+		for (int i = 1; i <= img.getStackSize(); i++) {
+			img.setSlice(i);
+			final ImageProcessor ip = img.getProcessor();
+
+			final ListIterator it = typeVector.listIterator();
+			while (it.hasNext()) {
+				final CellCntrMarkerVector mv = (CellCntrMarkerVector) it.next();
+				final int typeID = mv.getType();
+				final ListIterator mit = mv.listIterator();
+				while (mit.hasNext()) {
+					final CellCntrMarker m = (CellCntrMarker) mit.next();
+					if (m.getZ() == i) {
+						final int xM = m.getX();
+						final int yM = m.getY();
+						final int zM = m.getZ();
+						final double value = ip.getPixelValue(xM, yM);
+						IJ.write(typeID + "\t" + zM + "\t" + xM + "\t" + yM + "\t" + value);
+					}
+				}
+			}
+		}
+	}
+
+	public Vector getTypeVector() {
+		return typeVector;
+	}
+
+	public void setTypeVector(final Vector typeVector) {
+		this.typeVector = typeVector;
+	}
+
+	public CellCntrMarkerVector getCurrentMarkerVector() {
+		return currentMarkerVector;
+	}
+
+	public void setCurrentMarkerVector(
+		final CellCntrMarkerVector currentMarkerVector)
+	{
+		this.currentMarkerVector = currentMarkerVector;
+	}
+
+	public boolean isDelmode() {
+		return delmode;
+	}
+
+	public void setDelmode(final boolean delmode) {
+		this.delmode = delmode;
+	}
+
+	public boolean isShowNumbers() {
+		return showNumbers;
+	}
+
+	public void setShowNumbers(final boolean showNumbers) {
+		this.showNumbers = showNumbers;
+	}
+
+	public void setShowAll(final boolean showAll) {
+		this.showAll = showAll;
+	}
 
 }
