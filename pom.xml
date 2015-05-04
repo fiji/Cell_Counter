@@ -52,6 +52,16 @@
 			<artifactId>ij</artifactId>
 		</dependency>
 
+		<!-- SciJava dependencies -->
+		<dependency>
+			<groupId>org.scijava</groupId>
+			<artifactId>scijava-common</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.scijava</groupId>
+			<artifactId>scijava-ui-awt</artifactId>
+		</dependency>
+
 		<!-- Test scope dependencies -->
 		<dependency>
 			<groupId>sc.fiji</groupId>
