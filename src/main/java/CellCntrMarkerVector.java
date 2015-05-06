@@ -23,10 +23,15 @@
 
 // Created on December 13, 2005, 8:40 AM
 
+import ij.IJ;
+
 import java.awt.Color;
 import java.awt.Point;
 import java.util.ListIterator;
 import java.util.Vector;
+
+import org.scijava.Context;
+import org.scijava.options.OptionsService;
 
 /**
  * TODO
@@ -36,13 +41,11 @@ import java.util.Vector;
 public class CellCntrMarkerVector extends Vector<CellCntrMarker> {
 
 	private int type;
-	private Color color;
 
 	/** Creates a new instance of MarkerVector */
 	public CellCntrMarkerVector(final int type) {
 		super();
 		this.type = type;
-		color = createColor(type);
 	}
 
 	public void addMarker(final CellCntrMarker marker) {
@@ -63,41 +66,6 @@ public class CellCntrMarkerVector extends Vector<CellCntrMarker> {
 
 	public void removeLastMarker() {
 		super.removeElementAt(size() - 1);
-	}
-
-	private Color createColor(final int typeID) {
-		switch (typeID) {
-			case (1):
-				return Color.blue;
-			case (2):
-				return Color.cyan;
-			case (3):
-				return Color.green;
-			case (4):
-				return Color.magenta;
-			case (5):
-				return Color.orange;
-			case (6):
-				return Color.pink;
-			case (7):
-				return Color.red;
-			case (8):
-				return Color.yellow;
-			default:
-				Color c =
-					new Color((int) (255 * Math.random()), (int) (255 * Math.random()),
-						(int) (255 * Math.random()));
-				while (c.equals(Color.blue) | c.equals(Color.cyan) |
-					c.equals(Color.green) | c.equals(Color.magenta) |
-					c.equals(Color.orange) | c.equals(Color.pink) | c.equals(Color.red) |
-					c.equals(Color.yellow))
-				{
-					c =
-						new Color((int) (255 * Math.random()), (int) (255 * Math.random()),
-							(int) (255 * Math.random()));
-				}
-				return c;
-		}
 	}
 
 	public CellCntrMarker getMarkerFromPosition(final Point p,
@@ -136,11 +104,11 @@ public class CellCntrMarkerVector extends Vector<CellCntrMarker> {
 	}
 
 	public Color getColor() {
-		return color;
-	}
-
-	public void setColor(final Color color) {
-		this.color = color;
+		final Context c = (Context) IJ.runPlugIn("org.scijava.Context", "");
+		final OptionsService optionsService = c.service(OptionsService.class);
+		final CellCounterOptions options =
+			optionsService.getOptions(CellCounterOptions.class);
+		return options.getColor(type);
 	}
 
 }

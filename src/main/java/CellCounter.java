@@ -58,6 +58,9 @@ import javax.swing.SwingConstants;
 import javax.swing.WindowConstants;
 import javax.swing.border.EtchedBorder;
 
+import org.scijava.Context;
+import org.scijava.command.CommandService;
+
 /**
  * TODO
  *
@@ -70,6 +73,7 @@ public class CellCounter extends JFrame implements ActionListener, ItemListener
 	private static final String REMOVE = "Remove";
 	private static final String RENAME = "Rename";
 	private static final String INITIALIZE = "Initialize";
+	private static final String OPTIONS = "Options";
 	private static final String RESULTS = "Results";
 	private static final String DELETE = "Delete";
 	private static final String DELMODE = "Delete Mode";
@@ -105,6 +109,7 @@ public class CellCounter extends JFrame implements ActionListener, ItemListener
 	private JButton removeButton;
 	private JButton renameButton;
 	private JButton initializeButton;
+	private JButton optionsButton;
 	private JButton resultsButton;
 	private JButton deleteButton;
 	private JButton resetButton;
@@ -314,6 +319,16 @@ public class CellCounter extends JFrame implements ActionListener, ItemListener
 		separator.setPreferredSize(new Dimension(1, 1));
 		gb.setConstraints(separator, gbc);
 		statButtonPanel.add(separator);
+
+		gbc = new GridBagConstraints();
+		gbc.anchor = GridBagConstraints.NORTHWEST;
+		gbc.fill = GridBagConstraints.BOTH;
+		gbc.gridx = 0;
+		gbc.gridwidth = GridBagConstraints.REMAINDER;
+		gbc.gridwidth = GridBagConstraints.REMAINDER;
+		optionsButton = makeButton(OPTIONS, "show options dialog");
+		gb.setConstraints(optionsButton, gbc);
+		statButtonPanel.add(optionsButton);
 
 		gbc = new GridBagConstraints();
 		gbc.anchor = GridBagConstraints.NORTHWEST;
@@ -604,6 +619,9 @@ public class CellCounter extends JFrame implements ActionListener, ItemListener
 		else if (command.equals(RESET)) {
 			reset();
 		}
+		else if (command.equals(OPTIONS)) {
+			options();
+		}
 		else if (command.equals(RESULTS)) {
 			report();
 		}
@@ -677,6 +695,12 @@ public class CellCounter extends JFrame implements ActionListener, ItemListener
 			mv.clear();
 		}
 		if (ic != null) ic.repaint();
+	}
+
+	public void options() {
+		final Context c = (Context) IJ.runPlugIn("org.scijava.Context", "");
+		final CommandService commandService = c.service(CommandService.class);
+		commandService.run(CellCounterOptions.class, true);
 	}
 
 	public void report() {
