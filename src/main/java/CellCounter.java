@@ -29,6 +29,7 @@ import ij.WindowManager;
 import ij.gui.ImageWindow;
 import ij.gui.Roi;
 import ij.gui.StackWindow;
+import ij.measure.Calibration;
 import ij.process.ImageProcessor;
 
 import java.awt.Dimension;
@@ -494,10 +495,14 @@ public class CellCounter extends JFrame implements ActionListener, ItemListener
 			IJ.noImage();
 		}
 		else if (img.getStackSize() == 1) {
+			
+			
 			ImageProcessor ip = img.getProcessor();
 			ip.resetRoi();
+			
 			if (keepOriginal) ip = ip.crop();
 			counterImg = new ImagePlus("Counter Window - " + img.getTitle(), ip);
+			
 			@SuppressWarnings("unchecked")
 			final Vector<Roi> displayList =
 				v139t ? img.getCanvas().getDisplayList() : null;
@@ -515,6 +520,7 @@ public class CellCounter extends JFrame implements ActionListener, ItemListener
 			}
 			counterImg =
 				new ImagePlus("Counter Window - " + img.getTitle(), counterStack);
+			
 			counterImg.setDimensions(img.getNChannels(), img.getNSlices(), img
 				.getNFrames());
 			if (img.isComposite()) {
@@ -529,6 +535,10 @@ public class CellCounter extends JFrame implements ActionListener, ItemListener
 			ic = new CellCntrImageCanvas(counterImg, typeVector, this, displayList);
 			new StackWindow(counterImg, ic);
 		}
+		
+		Calibration cal = img.getCalibration();	//	to conserve voxel size of the original image
+		counterImg.setCalibration(cal);
+		
 		if (!keepOriginal) {
 			img.changes = false;
 			img.close();
@@ -713,10 +723,18 @@ public class CellCounter extends JFrame implements ActionListener, ItemListener
 			final String str = button.getText(); // System.out.println(str);
 			labels = labels.concat(str + "\t");
 		}
+		labels = labels.concat("\tC-pos\tZ-pos\tT-pos\t");						// add new columns containing C,Z,T positions
+		
 		IJ.setColumnHeadings(labels);
 		String results = "";
 		if (isStack) {
 			for (int slice = 1; slice <= counterImg.getStackSize(); slice++) {
+				
+				int[] realPosArray = counterImg.convertIndexToPosition(slice); // from the slice we get the array  [channel, slice, frame]
+				final int channel 	= realPosArray[0];
+				final int zPos		= realPosArray[1];
+				final int frame 	= realPosArray[2];
+				
 				results = "";
 				final ListIterator<CellCntrMarkerVector> mit =
 					typeVector.listIterator();
@@ -737,6 +755,8 @@ public class CellCounter extends JFrame implements ActionListener, ItemListener
 				for (int i = 0; i < typeTotals.length; i++) {
 					results = results.concat(typeTotals[i] + "\t");
 				}
+				String cztPosition = String.format("%d\t%d\t%d\t",channel,zPos,frame);	// concat the c,z,t value position 
+				results = results.concat(cztPosition);
 				IJ.write(results);
 			}
 			IJ.write("");
