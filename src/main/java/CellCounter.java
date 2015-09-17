@@ -29,6 +29,7 @@ import ij.WindowManager;
 import ij.gui.ImageWindow;
 import ij.gui.Roi;
 import ij.gui.StackWindow;
+import ij.measure.Calibration;
 import ij.process.ImageProcessor;
 
 import java.awt.Dimension;
@@ -494,10 +495,14 @@ public class CellCounter extends JFrame implements ActionListener, ItemListener
 			IJ.noImage();
 		}
 		else if (img.getStackSize() == 1) {
+			
+			
 			ImageProcessor ip = img.getProcessor();
 			ip.resetRoi();
+			
 			if (keepOriginal) ip = ip.crop();
 			counterImg = new ImagePlus("Counter Window - " + img.getTitle(), ip);
+			
 			@SuppressWarnings("unchecked")
 			final Vector<Roi> displayList =
 				v139t ? img.getCanvas().getDisplayList() : null;
@@ -515,6 +520,7 @@ public class CellCounter extends JFrame implements ActionListener, ItemListener
 			}
 			counterImg =
 				new ImagePlus("Counter Window - " + img.getTitle(), counterStack);
+			
 			counterImg.setDimensions(img.getNChannels(), img.getNSlices(), img
 				.getNFrames());
 			if (img.isComposite()) {
@@ -529,6 +535,10 @@ public class CellCounter extends JFrame implements ActionListener, ItemListener
 			ic = new CellCntrImageCanvas(counterImg, typeVector, this, displayList);
 			new StackWindow(counterImg, ic);
 		}
+		
+		Calibration cal = img.getCalibration();	//	to conserve voxel size of the original image
+		counterImg.setCalibration(cal);
+		
 		if (!keepOriginal) {
 			img.changes = false;
 			img.close();
