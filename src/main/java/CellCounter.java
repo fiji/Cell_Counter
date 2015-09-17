@@ -723,10 +723,18 @@ public class CellCounter extends JFrame implements ActionListener, ItemListener
 			final String str = button.getText(); // System.out.println(str);
 			labels = labels.concat(str + "\t");
 		}
+		labels = labels.concat("\tC-pos\tZ-pos\tT-pos\t");						// add new columns containing C,Z,T positions
+		
 		IJ.setColumnHeadings(labels);
 		String results = "";
 		if (isStack) {
 			for (int slice = 1; slice <= counterImg.getStackSize(); slice++) {
+				
+				int[] realPosArray = counterImg.convertIndexToPosition(slice); // from the slice we get the array  [channel, slice, frame]
+				final int channel 	= realPosArray[0];
+				final int zPos		= realPosArray[1];
+				final int frame 	= realPosArray[2];
+				
 				results = "";
 				final ListIterator<CellCntrMarkerVector> mit =
 					typeVector.listIterator();
@@ -747,6 +755,8 @@ public class CellCounter extends JFrame implements ActionListener, ItemListener
 				for (int i = 0; i < typeTotals.length; i++) {
 					results = results.concat(typeTotals[i] + "\t");
 				}
+				String cztPosition = String.format("%d\t%d\t%d\t",channel,zPos,frame);	// concat the c,z,t value position 
+				results = results.concat(cztPosition);
 				IJ.write(results);
 			}
 			IJ.write("");
