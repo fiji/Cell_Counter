@@ -32,6 +32,10 @@
 		<tag>HEAD</tag>
 		<url>https://github.com/fiji/Cell_Counter</url>
 	</scm>
+	<issueManagement>
+		<system>GitHub Issues</system>
+		<url>https://github.com/fiji/Cell_Counter/issues</url>
+	</issueManagement>
 	<ciManagement>
 		<system>Jenkins</system>
 		<url>http://jenkins.imagej.net/job/Cell_Counter/</url>
