@@ -17,14 +17,36 @@
 
 	<developers>
 		<developer>
-			<name>Kurt De Vos</name>
-			<email>kurt.devos@iop.kcl.ac.uk</email>
-			<organization>University of Sheffield, Academic Neurology</organization>
+			<id>ctrueden</id>
+			<name>Curtis Rueden</name>
+			<url>http://imagej.net/User:Rueden</url>
 			<roles>
-				<role>author</role>
+				<role>lead</role>
+				<role>reviewer</role>
+				<role>support</role>
+				<role>maintainer</role>
+			</roles>
+		</developer>
+		<developer>
+			<id>hinerm</id>
+			<name>Mark Hiner</name>
+			<url>http://imagej.net/User:Hinerm</url>
+			<roles>
+				<role>lead</role>
+				<role>maintainer</role>
 			</roles>
 		</developer>
 	</developers>
+	<contributors>
+		<contributor>
+			<name>Kurt De Vos</name>
+			<roles><role>founder</role></roles>
+		</contributor>
+		<contributor>
+			<name>Romain Guiet</name>
+			<properties><id>romainGuiet</id></properties>
+		</contributor>
+	</contributors>
 
 	<scm>
 		<connection>scm:git:git://github.com/fiji/Cell_Counter</connection>
