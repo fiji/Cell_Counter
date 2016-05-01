@@ -460,10 +460,12 @@ public class CellCounter extends JFrame implements ActionListener, ItemListener
 		final ListIterator<CellCntrMarkerVector> it = typeVector.listIterator();
 		while (it.hasNext()) {
 			final int index = it.nextIndex();
-			final CellCntrMarkerVector markerVector = it.next();
-			final int count = markerVector.size();
-			final JTextField tArea = txtFieldVector.get(index);
-			tArea.setText("" + count);
+			if (txtFieldVector.size() > index) {
+				final CellCntrMarkerVector markerVector = it.next();
+				final int count = markerVector.size();
+				final JTextField tArea = txtFieldVector.get(index);
+				tArea.setText("" + count);
+			}
 		}
 		validateLayout();
 	}
