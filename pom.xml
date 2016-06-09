@@ -29,15 +29,6 @@
 				<role>maintainer</role>
 			</roles>
 		</developer>
-		<developer>
-			<id>hinerm</id>
-			<name>Mark Hiner</name>
-			<url>http://imagej.net/User:Hinerm</url>
-			<roles>
-				<role>lead</role>
-				<role>maintainer</role>
-			</roles>
-		</developer>
 	</developers>
 	<contributors>
 		<contributor>
@@ -47,6 +38,11 @@
 		<contributor>
 			<name>Romain Guiet</name>
 			<properties><id>romainGuiet</id></properties>
+		</contributor>
+		<contributor>
+			<name>Mark Hiner</name>
+			<url>http://imagej.net/User:Hinerm</url>
+			<properties><id>hinerm</id></properties>
 		</contributor>
 	</contributors>
 
