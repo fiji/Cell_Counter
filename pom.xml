@@ -10,7 +10,7 @@
 	</parent>
 
 	<artifactId>Cell_Counter</artifactId>
-	<version>2.2.1-SNAPSHOT</version>
+	<version>2.2.1</version>
 
 	<name>plugins/Cell_Counter.jar</name>
 	<description />
@@ -49,7 +49,7 @@
 	<scm>
 		<connection>scm:git:git://github.com/fiji/Cell_Counter</connection>
 		<developerConnection>scm:git:git@github.com:fiji/Cell_Counter</developerConnection>
-		<tag>HEAD</tag>
+		<tag>Cell_Counter-2.2.1</tag>
 		<url>https://github.com/fiji/Cell_Counter</url>
 	</scm>
 	<issueManagement>
