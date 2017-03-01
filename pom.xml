@@ -76,8 +76,8 @@
 		<url>https://github.com/fiji/Cell_Counter/issues</url>
 	</issueManagement>
 	<ciManagement>
-		<system>Jenkins</system>
-		<url>http://jenkins.imagej.net/job/Cell_Counter/</url>
+		<system>Travis CI</system>
+		<url>https://travis-ci.org/fiji/Cell_Counter</url>
 	</ciManagement>
 
 	<properties>
