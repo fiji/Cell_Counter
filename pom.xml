@@ -14,7 +14,7 @@
 	<version>2.2.2-SNAPSHOT</version>
 
 	<name>Cell Counter</name>
-	<description>Cell Counter plugin for Fiji.</description>
+	<description>Cell Counter plugin for ImageJ.</description>
 	<url>http://imagej.net/Cell_Counter</url>
 	<inceptionYear>2001</inceptionYear>
 	<organization>
@@ -83,7 +83,6 @@
 	<properties>
 		<license.licenseName>gpl_v3</license.licenseName>
 		<license.copyrightOwners>Fiji developers.</license.copyrightOwners>
-		<license.projectName>Fiji distribution of ImageJ for the life sciences.</license.projectName>
 	</properties>
 
 	<repositories>
@@ -117,19 +116,4 @@
 			<scope>test</scope>
 		</dependency>
 	</dependencies>
-
-	<build>
-		<plugins>
-			<plugin>
-				<groupId>org.codehaus.mojo</groupId>
-				<artifactId>license-maven-plugin</artifactId>
-				<configuration>
-					<licenseName>gpl_v3</licenseName>
-					<organizationName>Kurt De Vos and Board of Regents of the
-University of Wisconsin-Madison.</organizationName>
-					<projectName>Cell Counter plugin for ImageJ.</projectName>
-				</configuration>
-			</plugin>
-		</plugins>
-	</build>
 </project>
