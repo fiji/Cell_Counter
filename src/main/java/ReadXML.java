@@ -92,15 +92,22 @@ public class ReadXML {
 	public Vector<CellCntrMarkerVector> readMarkerData() {
 		final Vector<CellCntrMarkerVector> typeVector =
 			new Vector<CellCntrMarkerVector>();
+		String markerName = "";
 
 		final NodeList markerTypeNodeList = getNodeListFromTag(doc, "Marker_Type");
 		for (int i = 0; i < markerTypeNodeList.getLength(); i++) {
 			final Element markerTypeElement = getElement(markerTypeNodeList, i);
 			final NodeList typeNodeList =
 				markerTypeElement.getElementsByTagName("Type");
+			// Reads type name, with bypass for older format.
+			final NodeList nameNodeList = 
+				markerTypeElement.getElementsByTagName("Name");
+			markerName = ("Type " + Integer.parseInt(readValue(typeNodeList, 0)));
+			if(nameNodeList.getLength() > 0) {
+				markerName = readValue(nameNodeList, 0);
+			}
 			final CellCntrMarkerVector markerVector =
-				new CellCntrMarkerVector(Integer.parseInt(readValue(typeNodeList, 0)));
-
+					new CellCntrMarkerVector(Integer.parseInt(readValue(typeNodeList, 0)), markerName);				
 			final NodeList markerNodeList =
 				markerTypeElement.getElementsByTagName("Marker");
 			for (int j = 0; j < markerNodeList.getLength(); j++) {

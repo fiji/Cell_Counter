@@ -41,11 +41,13 @@ import org.scijava.options.OptionsService;
 public class CellCntrMarkerVector extends Vector<CellCntrMarker> {
 
 	private int type;
+	private String name;
 
 	/** Creates a new instance of MarkerVector */
-	public CellCntrMarkerVector(final int type) {
+	public CellCntrMarkerVector(final int type, final String name) {
 		super();
 		this.type = type;
+		this.name = name;
 	}
 
 	public void addMarker(final CellCntrMarker marker) {
@@ -101,6 +103,14 @@ public class CellCntrMarkerVector extends Vector<CellCntrMarker> {
 
 	public void setType(final int type) {
 		this.type = type;
+	}
+	
+	public String getName() {
+		return name;
+	}
+	
+	public void setName(final String name) {
+		this.name = name;
 	}
 
 	public Color getColor() {
