@@ -44,6 +44,11 @@ public class CellCntrMarkerVector extends Vector<CellCntrMarker> {
 	private String name;
 
 	/** Creates a new instance of MarkerVector */
+	public CellCntrMarkerVector(final int type) {
+		this(type, "<Unnamed>");
+	}
+
+	/** Creates a new instance of MarkerVector */
 	public CellCntrMarkerVector(final int type, final String name) {
 		super();
 		this.type = type;
