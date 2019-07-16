@@ -31,7 +31,10 @@ import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.UnsupportedEncodingException;
 import java.util.ListIterator;
+import java.util.Iterator;
 import java.util.Vector;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * TODO
@@ -63,7 +66,9 @@ public class WriteXML {
 	}
 
 	public boolean writeXML(final String imgFilename,
-		final Vector<CellCntrMarkerVector> typeVector, final int currentType)
+		final Vector<CellCntrMarkerVector> typeVector,
+		final int currentType,
+		final Map<String,String> metaData)
 	{
 		try {
 			out.write("<?xml version=\"1.0\" ");
@@ -72,8 +77,16 @@ public class WriteXML {
 
 			// write the image properties
 			out.write(" <Image_Properties>\r\n");
-			out
-				.write("     <Image_Filename>" + imgFilename + "</Image_Filename>\r\n");
+			out.write("     <Image_Filename>" + imgFilename + "</Image_Filename>\r\n");
+			// add further metadata to properties
+			final Set metaDataSet = metaData.entrySet();
+			final Iterator iterator = metaDataSet.iterator();
+			while(iterator.hasNext()) {
+				Map.Entry entry = (Map.Entry)iterator.next();
+				final String key = (entry.getKey()).toString();
+				final String value = (entry.getValue()).toString();
+				out.write("     <" + key + ">" + value + "</" + key + ">\r\n");
+			}
 			out.write(" </Image_Properties>\r\n");
 
 			// write the marker data
@@ -83,8 +96,10 @@ public class WriteXML {
 			while (it.hasNext()) {
 				final CellCntrMarkerVector markerVector = it.next();
 				final int type = markerVector.getType();
+				final String name = markerVector.getName();
 				out.write("     <Marker_Type>\r\n");
 				out.write("         <Type>" + type + "</Type>\r\n");
+				out.write("         <Name>" + name + "</Name>\r\n");
 				final ListIterator<CellCntrMarker> lit = markerVector.listIterator();
 				while (lit.hasNext()) {
 					final CellCntrMarker marker = lit.next();

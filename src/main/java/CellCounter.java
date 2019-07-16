@@ -45,6 +45,8 @@ import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.util.ListIterator;
 import java.util.Vector;
+import java.util.Map;
+import java.util.HashMap;
 
 import javax.swing.BorderFactory;
 import javax.swing.ButtonGroup;
@@ -95,6 +97,9 @@ public class CellCounter extends JFrame implements ActionListener, ItemListener
 	private CellCntrMarkerVector markerVector;
 	private CellCntrMarkerVector currentMarkerVector;
 	private int currentMarkerIndex;
+		
+	// Map<key,value> for storing metadata to write with WriteXML
+	private Map<String,String> metaData = new HashMap<>();
 
 	private JPanel dynPanel;
 	private JPanel dynButtonPanel;
@@ -200,7 +205,7 @@ public class CellCounter extends JFrame implements ActionListener, ItemListener
 		gbc.ipadx = 5;
 		gb.setConstraints(dynPanel, gbc);
 		getContentPane().add(dynPanel);
-
+				
 		dynButtonPanel.add(makeDynRadioButton(1));
 		dynButtonPanel.add(makeDynRadioButton(2));
 		dynButtonPanel.add(makeDynRadioButton(3));
@@ -476,7 +481,8 @@ public class CellCounter extends JFrame implements ActionListener, ItemListener
 		jrButton.addActionListener(this);
 		dynRadioVector.add(jrButton);
 		radioGrp.add(jrButton);
-		markerVector = new CellCntrMarkerVector(id);
+		final String markerName = ("Type " + id);
+		markerVector = new CellCntrMarkerVector(id,markerName);
 		typeVector.add(markerVector);
 		dynTxtPanel.add(makeDynamicTextArea());
 		return jrButton;
@@ -540,6 +546,12 @@ public class CellCounter extends JFrame implements ActionListener, ItemListener
 		
 		Calibration cal = img.getCalibration();	//	to conserve voxel size of the original image
 		counterImg.setCalibration(cal);
+		
+		// Extracting calibration data to write to XML
+		metaData.put("X_Calibration", "" + cal.pixelWidth);
+		metaData.put("Y_Calibration", "" + cal.pixelHeight);
+		metaData.put("Z_Calibration", "" + cal.pixelDepth);
+		metaData.put("Calibration_Unit", "" + cal.getUnit());
 		
 		if (!keepOriginal) {
 			img.changes = false;
@@ -610,6 +622,7 @@ public class CellCounter extends JFrame implements ActionListener, ItemListener
 			radioGrp.remove(button);
 			button.setText(name);
 			radioGrp.add(button);
+			currentMarkerVector.setName(name);
 		}
 		else if (command.equals(INITIALIZE)) {
 			initializeImage();
@@ -802,6 +815,19 @@ public class CellCounter extends JFrame implements ActionListener, ItemListener
 					txtFieldVector.removeElementAt(txtFieldVector.size() - 1);
 				}
 			}
+			
+			// Sets radio button names to loaded names
+			final ListIterator<CellCntrMarkerVector> it = typeVector.listIterator();
+			while (it.hasNext()) {
+				final int i = it.nextIndex();
+				final CellCntrMarkerVector markerVector = it.next();
+				final String name = markerVector.getName();
+				final JRadioButton button = dynRadioVector.get(i);
+				radioGrp.remove(button);
+				button.setText(name);
+				radioGrp.add(button);
+			}
+			
 			final JRadioButton butt = dynRadioVector.get(index);
 			butt.setSelected(true);
 		}
@@ -816,7 +842,7 @@ public class CellCounter extends JFrame implements ActionListener, ItemListener
 		if (!filePath.endsWith(".xml")) filePath += ".xml";
 		final WriteXML wxml = new WriteXML(filePath);
 		wxml.writeXML(img.getTitle(), typeVector, typeVector
-			.indexOf(currentMarkerVector));
+			.indexOf(currentMarkerVector), metaData);
 	}
 
 	public static final int SAVE = FileDialog.SAVE, OPEN = FileDialog.LOAD;
