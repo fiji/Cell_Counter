@@ -815,6 +815,21 @@ public class CellCounter extends JFrame implements ActionListener, ItemListener
 				}
 			}
 			
+			// Adds radio buttons if too few initialized.
+			while (dynRadioVector.size() < typeVector.size()) {
+				final int i = dynRadioVector.size() + 1;
+				dynGrid.setRows(i);
+				final JRadioButton jrButton = new JRadioButton("Type " + i);
+				jrButton.setActionCommand(TYPE_COMMAND_PREFIX + i);
+				jrButton.addActionListener(this);
+				dynRadioVector.add(jrButton);
+				radioGrp.add(jrButton);
+				dynTxtPanel.add(makeDynamicTextArea());
+				dynButtonPanel.add(jrButton);
+				typeVector.get(index);
+				validateLayout();
+			}
+			
 			// Sets radio button names to loaded names
 			final ListIterator<CellCntrMarkerVector> it = typeVector.listIterator();
 			while (it.hasNext()) {
