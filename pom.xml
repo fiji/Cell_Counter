@@ -11,7 +11,7 @@
 
 	<groupId>sc.fiji</groupId>
 	<artifactId>Cell_Counter</artifactId>
-	<version>3.0.0-SNAPSHOT</version>
+	<version>3.0.1-SNAPSHOT</version>
 
 	<name>Cell Counter</name>
 	<description>Cell Counter plugin for ImageJ.</description>
