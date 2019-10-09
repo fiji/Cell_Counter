@@ -20,6 +20,8 @@
  * #L%
  */
 
+package sc.fiji.cellCounter;
+
 import ij.CompositeImage;
 import ij.IJ;
 import ij.ImagePlus;

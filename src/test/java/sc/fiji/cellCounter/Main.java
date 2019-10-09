@@ -20,6 +20,8 @@
  * #L%
  */
 
+package sc.fiji.cellCounter;
+
 import fiji.Debug;
 
 /**

@@ -20,50 +20,24 @@
  * #L%
  */
 
-// Created on December 13, 2005, 8:41 AM
+// Created on December 27, 2005, 4:56 PM
+
+package sc.fiji.cellCounter;
+
+import ij.plugin.frame.PlugInFrame;
 
 /**
- * TODO
- *
  * @author Kurt De Vos
  */
-public class CellCntrMarker {
+public class Cell_Counter extends PlugInFrame {
 
-	private int x;
-	private int y;
-	private int z;
-
-	/** Creates a new instance of Marker */
-	public CellCntrMarker() {}
-
-	public CellCntrMarker(final int x, final int y, final int z) {
-		this.x = x;
-		this.y = y;
-		this.z = z;
+	/** Creates a new instance of Cell_Counter */
+	public Cell_Counter() {
+		super("Cell Counter");
+		new CellCounter();
 	}
 
-	public int getX() {
-		return x;
-	}
-
-	public void setX(final int x) {
-		this.x = x;
-	}
-
-	public int getY() {
-		return y;
-	}
-
-	public void setY(final int y) {
-		this.y = y;
-	}
-
-	public int getZ() {
-		return z;
-	}
-
-	public void setZ(final int z) {
-		this.z = z;
-	}
+	@Override
+	public void run(final String arg) {}
 
 }

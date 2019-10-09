@@ -5,13 +5,13 @@
 	<parent>
 		<groupId>org.scijava</groupId>
 		<artifactId>pom-scijava</artifactId>
-		<version>26.0.0</version>
+		<version>27.0.1</version>
 		<relativePath />
 	</parent>
 
 	<groupId>sc.fiji</groupId>
 	<artifactId>Cell_Counter</artifactId>
-	<version>2.3.2-SNAPSHOT</version>
+	<version>3.0.0-SNAPSHOT</version>
 
 	<name>Cell Counter</name>
 	<description>Cell Counter plugin for ImageJ.</description>
@@ -85,6 +85,8 @@
 	</ciManagement>
 
 	<properties>
+		<package-name>sc.fiji.cellCounter</package-name>
+
 		<license.licenseName>gpl_v3</license.licenseName>
 		<license.copyrightOwners>Fiji developers.</license.copyrightOwners>
 

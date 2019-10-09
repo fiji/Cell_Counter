@@ -22,6 +22,8 @@
 
 // Created on 27 November 2004, 10:47
 
+package sc.fiji.cellCounter;
+
 import java.io.File;
 import java.io.IOException;
 import java.util.Vector;

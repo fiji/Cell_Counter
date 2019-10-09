@@ -22,6 +22,8 @@
 
 // Created on November 22, 2005, 5:58 PM
 
+package sc.fiji.cellCounter;
+
 import ij.IJ;
 import ij.ImagePlus;
 import ij.gui.ImageCanvas;

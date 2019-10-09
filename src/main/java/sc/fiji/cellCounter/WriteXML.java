@@ -22,6 +22,8 @@
 
 // Created on 23 November 2004, 22:56
 
+package sc.fiji.cellCounter;
+
 import java.io.BufferedOutputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;

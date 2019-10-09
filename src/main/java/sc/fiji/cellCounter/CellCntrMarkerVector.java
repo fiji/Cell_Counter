@@ -22,6 +22,8 @@
 
 // Created on December 13, 2005, 8:40 AM
 
+package sc.fiji.cellCounter;
+
 import ij.IJ;
 
 import java.awt.Color;

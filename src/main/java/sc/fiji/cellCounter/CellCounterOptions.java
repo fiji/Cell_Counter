@@ -20,6 +20,8 @@
  * #L%
  */
 
+package sc.fiji.cellCounter;
+
 import java.awt.Color;
 
 import org.scijava.options.OptionsPlugin;
