@@ -70,7 +70,7 @@
 	</mailingLists>
 
 	<scm>
-		<connection>scm:git:git://github.com/fiji/Cell_Counter</connection>
+		<connection>scm:git:https://github.com/fiji/Cell_Counter</connection>
 		<developerConnection>scm:git:git@github.com:fiji/Cell_Counter</developerConnection>
 		<tag>HEAD</tag>
 		<url>https://github.com/fiji/Cell_Counter</url>
